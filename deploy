@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -ex
+
+export SOLC_FLAGS=${SOLC_FLAGS:-"--optimize"}
+export ETH_GAS=${ETH_GAS:-"2000000"}
+
+dapp build
+
+ROLES=$(dapp create DSRoles)
+CNX=$(dapp create Cnx)
+VAULT=$(dapp create DSVault)
+
+seth send $CNX "setAuthority(address)" $ROLES
+seth send $VAULT "setAuthority(address)" $ROLES
+
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $VAULT $(seth calldata 'mint(uint128)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $VAULT $(seth calldata 'burn(uint128)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $VAULT $(seth calldata 'pull(address,uint128)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $VAULT $(seth calldata 'push(address,uint128)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $CNX $(seth calldata 'setUserRole(address,uint8,bool)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $CNX $(seth calldata 'addRequestExchange(string,string,uint128,address)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $CNX $(seth calldata 'editRequestExchange(uint256,string,string,uint128,address)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 1 $CNX $(seth calldata 'acceptExchange(uint256)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 2 $CNX $(seth calldata 'acceptExchange(uint256)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 3 $CNX $(seth calldata 'mint(uint128)') true
+seth send $ROLES "setRoleCapability(uint8,address,bytes4,bool)" 3 $CNX $(seth calldata 'burn(uint128)') true
+
+seth send $ROLES "setUserRole(address,uint8,bool)" $ETH_FROM 1 true
+seth send $ROLES "setUserRole(address,uint8,bool)" $VAULT 3 true
+
+seth send $ROLES "setAuthority(address)" $ROLES
+seth send $ROLES "setOwner(address)" $ETH_FROM
+
+seth send $VAULT "swap(address)" $CNX
+seth send $VAULT "mint(uint128)" $(seth --to-uint256 $(seth --to-wei 100000 eth))
+
+export SETH_ASYNC=yes
+
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x294B5cBA2BE68Ec6239fd50CDA0ac4dbf86bb644 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x8756C136c570835aAffe62C36454b21076e37C3F 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x1B2A65BE826564Ee5f423a396644AE979DbD8e6a 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x6Ca2B3fb8591C58D5E761F840D252971A4933e0e 2 true
+seth send $ROLES "setUserRole(address,uint8,bool)" 0xf430057462E12d732B844f1c391A20309eD9421a 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xe25aea2a5cb064c6321736EE496141382d041C3e 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x182023BF83694b1f534718F85518805F0dc87F13 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x9C30b61e35798581e66Aa58559011663754706F2 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x0ed4955b57E2C769c04681f64b0cbC1Db21eF16F 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xBa0763B81cDF904adbC3AdAa8Ce3029EE09Cc7cf 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x192Be0CA18275F7aC20434df228115A30DF8C000 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x4ea32f438E6Ddb265fdeb46c9857C193e7ba6D38 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x62c039cF6EA5d1a51b6B13926B1cf9baFA0f793E 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x6e0a67c6bfAEccAE5de0b532822772c4CE81f7b5 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x26cb304d64729142834a7652165d9EdDE3a4b66E 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x217CE1ba587dAb1269226c4d0f45816dDaCcE0f7 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x92F99DF2242EA4E2C9135dd5fe0C756fccE7331D 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x2c89f10D34039117CCFAaCA3307c7EF85e966E52 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x1214518AEc07D7E1b009072d8d8D02cD13CfaF48 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xF8EC42A240b59e4EA1E9ed2294d917337748b126 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x114500071e49d637492b5204b4059C95D0ad4013 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xb96B94D08ef221832e0b2352Fe550B3d0b777E76 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x602799A62D2a96726511B2C45B798b8b6257a6A9 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x2323e2141c325cbF5cB69d5C4125C8db56Ff90b2 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x6ee6b5Fbc592B74AeFEb1B7a98be5Cd1AA9b8ed0 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x621A2C41Cb794Acd6176AdcD174974092Ea67b60 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xEbfA39713a5b60a47E0eFAb8a310d629eE0AF855 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xbB0B7c7673b84169990Ea019dbe8D1c48340e1A2 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x811d359a4d4dc0a485462587128808752446fC26 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x29643314B0F38788397919bB357dE2f2c0382da0 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0xa3348DEAaD5771C77AAf316b7408214e482Bc893 2 true
+# seth send $ROLES "setUserRole(address,uint8,bool)" 0x979B592E3C352Ec558f00E4bF5fdDF3Ae2a74823 2 true
+
+echo ROLES=$ROLES
+echo CNX=$CNX
+echo VAULT=$VAULT

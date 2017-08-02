@@ -7,3 +7,7 @@
 [submodule "lib/ds-roles"]
 	path = lib/ds-roles
 	url = https://github.com/dapphub/ds-roles.git
+[submodule "lib/ds-vault"]
+	path = lib/ds-vault
+	url = https://github.com/dapphub/ds-vault
+	
