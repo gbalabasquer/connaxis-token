@@ -71,6 +71,7 @@ seth send $ROLES "setUserRole(address,uint8,bool)" 0x979B592E3C352Ec558f00E4bF5f
 seth send $ROLES "setUserRole(address,uint8,bool)" 0xb314AE240E5aA37c2ceF6030e0b0dC4421274Fa5 2 true #carlos.torres
 seth send $ROLES "setUserRole(address,uint8,bool)" 0x80a55F269D6ae7603C4fD56e47d632FB53489517 2 true #mark.dee
 seth send $ROLES "setUserRole(address,uint8,bool)" 0x25d28aE2aE1E1Eeb7b86810E6c0B7f7C54C6eBAd 2 true #henrry.morales
+seth send $ROLES "setUserRole(address,uint8,bool)" 0x6e463d0b0495B236380D527bD22dd68D2669C254 2 true #nadia.chircoff
 
 echo ROLES=$ROLES
 echo CNX=$CNX
